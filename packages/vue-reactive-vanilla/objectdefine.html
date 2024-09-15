@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reactive Data Example</title>
+  </head>
+  <body>
+    <div>
+      <label for="nameInput">Name:</label>
+      <input type="text" id="nameInput" placeholder="Enter your name" />
+    </div>
+    <div>
+      <p class="output">Hello, <span id="nameDisplay"></span></p>
+    </div>
+
+    <script>
+      // 반응형 객체를 생성하는 함수
+      const reactive = (obj) => {
+        Object.keys(obj).forEach((key) => {
+          let internalValue = obj[key];
+
+          Object.defineProperty(obj, key, {
+            get() {
+              return internalValue;
+            },
+            set(newValue) {
+              internalValue = newValue;
+              // DOM 업데이트
+              if (key === "name") {
+                document.getElementById("nameDisplay").textContent = newValue;
+              }
+            },
+          });
+        });
+
+        return obj;
+      };
+
+      // 반응형 데이터 객체 생성
+      const data = reactive({
+        name: "",
+      });
+
+      // 입력 필드와 데이터 바인딩
+      const nameInput = document.getElementById("nameInput");
+      nameInput.addEventListener("input", (event) => {
+        data.name = event.target.value; // 데이터 변경 시 DOM 자동 업데이트
+      });
+    </script>
+  </body>
+</html>
