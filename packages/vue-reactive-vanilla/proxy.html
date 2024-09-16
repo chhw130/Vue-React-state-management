@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reactive Data Example</title>
+  </head>
+  <body>
+    <div>
+      <label for="nameInput">Name:</label>
+      <input type="text" id="nameInput" placeholder="Enter your name" />
+      <input
+        type="text"
+        id="descriptionInput"
+        placeholder="Enter your description"
+      />
+    </div>
+    <div>
+      <p class="output">Hello, <span id="nameDisplay"></span></p>
+      <p>
+        description :
+        <span id="descriptionDisplay"></span>
+      </p>
+    </div>
+
+    <script>
+      // Proxy 기반의 반응형 객체 생성 함수
+      const reactive = (obj) => {
+        return new Proxy(obj, {
+          set(target, key, value) {
+            target[key] = value;
+
+            // DOM 업데이트
+            if (key === "name") {
+              document.getElementById("nameDisplay").textContent = value;
+            }
+
+            if (key === "description") {
+              document.getElementById("descriptionDisplay").textContent = value;
+            }
+            return true;
+          },
+        });
+      };
+
+      const data = reactive({
+        name: "",
+        description: "",
+      });
+
+      // 입력 필드와 데이터 바인딩
+      const nameInput = document.getElementById("nameInput");
+      nameInput.addEventListener("input", (event) => {
+        data.name = event.target.value;
+      });
+
+      const descriptionInput = document.getElementById("descriptionInput");
+      descriptionInput.addEventListener("input", (event) => {
+        data.description = event.target.value;
+      });
+    </script>
+  </body>
+</html>
